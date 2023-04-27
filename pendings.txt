@@ -1,0 +1,4 @@
+lift and shift:
+full application setup with cache db mq
+beanstalk setup
+cloudfront
