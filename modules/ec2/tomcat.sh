@@ -2,7 +2,7 @@
 sudo su
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz"
 yum install java-1.8.0-openjdk -y
-yum install git maven wget -y
+yum install telnet git maven wget -y
 cd /tmp/
 wget $TOMURL -O tomcatbin.tar.gz
 mkdir /usr/local/tomcat8
@@ -32,8 +32,8 @@ EOT
 systemctl daemon-reload
 systemctl start tomcat
 systemctl enable tomcat
-git clone -b main https://github.com/odharmapuri2/kiwi-infra.git
-cd kiwi-infra
+git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git
+cd kiwi-infra2
 mvn install
 systemctl stop tomcat
 sleep 120

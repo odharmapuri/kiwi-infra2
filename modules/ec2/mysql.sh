@@ -11,7 +11,7 @@ sudo yum install mariadb-server -y
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 cd /tmp/
-git clone -b main https://github.com/odharmapuri2/kiwi-infra.git
+git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git
 
 #restore the dump file for the application
 sudo mysqladmin -u root password "$DATABASE_PASS"
@@ -35,4 +35,5 @@ sudo systemctl enable firewalld
 sudo firewall-cmd --get-active-zones
 sudo firewall-cmd --zone=public --add-port=3306/tcp --permanent
 sudo firewall-cmd --reload
+sudo systemctl restart firewalld
 sudo systemctl restart mariadb
