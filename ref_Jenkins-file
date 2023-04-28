@@ -21,41 +21,57 @@ pipeline {
             steps {
                 sh 'git clone -https://github.com/odharmapuri2/kiwi-infra2.git'
             }
-        }
-        /*stage('bulding infra'){
-            steps {
-                sh 'terraform init'
-                sh 'terraform validate'
-                sh 'terraform apply --auto-approve'
-            }
-        }*/
-        stage('packaging'){
-            steps {
-                sh 'mvn clean install'
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
             }
         }
-        stage('packaging'){
+        stage('Git'){
+            steps {
+                sh 'mvn clean install -DskipTests'
+            }
+            post {
+                success {
+                    echo 'Now Archiving...'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
+            }
+        }
+
+	stage('UNIT TEST'){
             steps {
                 sh 'mvn test'
             }
         }
-        stage('INTEGRATION TEST'){
+
+	stage('INTEGRATION TEST'){
             steps {
                 sh 'mvn verify -DskipUnitTests'
             }
         }
-        /*stage ('CODE ANALYSIS WITH CHECKSTYLE'){
+		
+        stage ('CODE ANALYSIS WITH CHECKSTYLE'){
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
-        }
-        stage('CODE ANALYSIS with SONARQUBE') {
-		    environment {
-                scannerHome = tool 'sonarscanner4'
+            post {
+                success {
+                    echo 'Generated Analysis Result'
+                }
             }
-            steps {
-                withSonarQubeEnv('sonar-pro') {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
+        }
+
+        stage('CODE ANALYSIS with SONARQUBE') {
+          
+		  environment {
+             scannerHome = tool 'sonarscanner4'
+          }
+
+          steps {
+            withSonarQubeEnv('sonar-pro') {
+               sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
                    -Dsonar.projectName=vprofile-repo \
                    -Dsonar.projectVersion=1.0 \
                    -Dsonar.sources=src/ \
@@ -63,12 +79,14 @@ pipeline {
                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                }
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
             }
+
+            timeout(time: 10, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+            }
+          }
         }
+
         stage("Publish to Nexus Repository Manager") {
             steps {
                 script {
@@ -99,11 +117,15 @@ pipeline {
                             ]
                         );
                     } 
-		            else {
+		    else {
                         error "*** File: ${artifactPath}, could not be found";
                     }
                 }
             }
-        }*/
+        }
+
+
     }
+
+
 }
