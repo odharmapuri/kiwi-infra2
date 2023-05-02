@@ -19,7 +19,7 @@ pipeline {
     stages{
         stage('Git clone'){
             steps {
-                sh 'git clone -https://github.com/odharmapuri2/kiwi-infra2.git'
+                sh 'git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git'
             }
         }
         /*stage('bulding infra'){
@@ -31,10 +31,10 @@ pipeline {
         }*/
         stage('packaging'){
             steps {
-                sh 'mvn clean install'
+                sh 'mvn -f kiwi-infra2/pom.xml clean install'
             }
         }
-        stage('packaging'){
+        stage('mvn test'){
             steps {
                 sh 'mvn test'
             }
@@ -48,28 +48,16 @@ pipeline {
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
-        }
+        }*/
         stage('CODE ANALYSIS with SONARQUBE') {
 		    environment {
-                scannerHome = tool 'sonarscanner4'
+                scannerHome = tool 'kiwisonar'
             }
             steps {
-                withSonarQubeEnv('sonar-pro') {
-                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
-                   -Dsonar.projectName=vprofile-repo \
-                   -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                }
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                sh '''mvn clean sonar:sonar'''
             }
         }
-        stage("Publish to Nexus Repository Manager") {
+        /*stage("Publish to Nexus Repository Manager") {
             steps {
                 script {
                     pom = readMavenPom file: "pom.xml";

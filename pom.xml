@@ -20,6 +20,9 @@
         <logback.version>1.1.3</logback.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <sonar.host.url>https://sonarcloud.io/</sonar.host.url>
+        <sonar.login>2d6ff119fe802335a2facd251125352c117ab2b4</sonar.login>
+        <sonar.organization>testdrive</sonar.organization>
     </properties>
 
     <dependencies>
