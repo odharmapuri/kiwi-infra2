@@ -1,0 +1,6 @@
+SONAR_TOKEN
+c9ccb8a4a3f966073f70c48dc9c9b7715f658108
+
+sonarcloud.io
+kiwi-app
+testdrive

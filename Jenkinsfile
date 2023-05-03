@@ -10,6 +10,14 @@ pipeline {
     stages{
         stage('Git clone'){
             steps {
+                script {
+                    def folder = new File( 'C:/ProgramData/Jenkins/.jenkins/workspace/*' )
+                    if( folder.exists() ) {
+                        sh "rm -rf C:/ProgramData/Jenkins/.jenkins/workspace/*"
+                    } else {
+                        sh '''git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git''' 
+                    }
+                
                 sh '''rm -rf C:/ProgramData/Jenkins/.jenkins/workspace/*'''
                 sh '''git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git'''
             }
@@ -17,7 +25,7 @@ pipeline {
         stage('creating s3'){
             steps {
                 sh '''terraform init'''
-                sh '''terraform apply -target=module.s3 --auto-approve'''
+                sh '''terraform apply -target="module.s3" --auto-approve'''
             }
         }
         stage('packaging'){
@@ -54,15 +62,15 @@ pipeline {
                 withAWS(region:'us-east-1',credentials:'s3creds') {
                     sh 'echo "Uploading content with AWS creds"'
                     /*s3Upload(file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/vprofile-v2.war', bucket:'testbuck3699', path:'/app/kiwi.war')*/
-                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/vprofile-v2.war', bucket:'testbuck3699/app')
-                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/classes/application.properties', bucket:'testbuck3699/app')
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/vprofile-v2.war', bucket:'kiwi-artifact-storage/app')
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/classes/application.properties', bucket:'kiwi-artifact-storage/app')
                 }
             }
         }
         stage('building infra'){
             steps {
-                sh '''terraform init'''
-                sh '''terraform apply -target=module.s3 --auto-approve'''
+                sh '''terraform init -upgrade'''
+                sh '''terraform apply --auto-approve'''
             }
         }
         /*stage("Publish to Nexus Repository Manager") {
