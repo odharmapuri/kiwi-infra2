@@ -1,11 +1,8 @@
 pipeline {
-    
 	agent any
-/*	
-	tools {
+	/*tools {
         maven "maven3"
     }
-	
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
@@ -15,11 +12,11 @@ pipeline {
         NEXUS_CREDENTIAL_ID = "nexuslogin"
         ARTVERSION = "${env.BUILD_ID}"
     }*/
-	
     stages{
         stage('Git clone'){
             steps {
-                sh 'git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git'
+                sh '''rm -rf C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/*'''
+                sh '''git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git'''
             }
         }
         /*stage('bulding infra'){
@@ -31,20 +28,21 @@ pipeline {
         }*/
         stage('packaging'){
             steps {
-                sh 'mvn -f kiwi-infra2/pom.xml clean install'
+                sh '''cd kiwi-infra2'''
+                sh '''mvn -f kiwi-infra2/pom.xml install'''
             }
         }
         stage('mvn test'){
             steps {
-                sh 'mvn test'
+                sh '''mvn -f kiwi-infra2/pom.xml test'''
             }
         }
-        stage('INTEGRATION TEST'){
+        /*stage('INTEGRATION TEST'){
             steps {
                 sh 'mvn verify -DskipUnitTests'
             }
         }
-        /*stage ('CODE ANALYSIS WITH CHECKSTYLE'){
+        stage ('CODE ANALYSIS WITH CHECKSTYLE'){
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
@@ -54,7 +52,7 @@ pipeline {
                 scannerHome = tool 'kiwisonar'
             }
             steps {
-                sh '''mvn clean sonar:sonar'''
+                sh '''mvn -f kiwi-infra2/pom.xml verify sonar:sonar'''
             }
         }
         /*stage("Publish to Nexus Repository Manager") {

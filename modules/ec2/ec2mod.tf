@@ -1,4 +1,4 @@
-resource "aws_instance" "app" {
+/*resource "aws_instance" "app" {
   count                       = 2
   ami                         = var.centos
   instance_type               = "t2.micro"
