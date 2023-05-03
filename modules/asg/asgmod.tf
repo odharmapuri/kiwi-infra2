@@ -1,4 +1,4 @@
-data "template_file" "usrdat" {
+/*data "template_file" "usrdat" {
   template = <<EOF
     #!/bin/bash
     sudo su
@@ -35,16 +35,16 @@ data "template_file" "usrdat" {
     systemctl start tomcat
     systemctl enable tomcat
   EOF
-}
+}*/
 
 resource "aws_launch_template" "lt" {
   name          = "${var.project}-lt"
   image_id      = "ami-002070d43b0a4f171"
   instance_type = "t2.micro"
   key_name      = var.key-pair
-  #const userTemplate = readFileSync('./user_template.txt', 'base64')
   #user_data     = file("modules/ec2/tomcat.sh")
-  user_data = base64encode(data.template_file.usrdat.rendered)
+  #user_data = base64encode(data.template_file.usrdat.rendered)
+  user_data = filebase64("modules/ec2/tomcat.sh")
   lifecycle {
     create_before_destroy = true
   }
@@ -67,6 +67,7 @@ resource "aws_autoscaling_group" "asg" {
   target_group_arns         = var.tg
   health_check_type         = "ELB"
   health_check_grace_period = 300
+  desired_capacity          = 2
   min_size                  = 2
   max_size                  = 4
   launch_template {
@@ -99,7 +100,7 @@ resource "aws_cloudwatch_metric_alarm" "up-alarm" {
   namespace           = "AWS/EC2"
   period              = "120"
   statistic           = "Average"
-  threshold           = "50"
+  threshold           = "60"
   dimensions = {
     "AutoScalingGroupName" = aws_autoscaling_group.asg.name
   }
@@ -125,7 +126,7 @@ resource "aws_cloudwatch_metric_alarm" "down-alarm" {
   namespace           = "AWS/EC2"
   period              = "120"
   statistic           = "Average"
-  threshold           = "20"
+  threshold           = "60"
   dimensions = {
     "AutoScalingGroupName" = aws_autoscaling_group.asg.name
   }

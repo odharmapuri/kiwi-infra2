@@ -1,4 +1,4 @@
-/*resource "aws_instance" "app" {
+resource "aws_instance" "app" {
   count                       = 2
   ami                         = var.centos
   instance_type               = "t2.micro"
@@ -6,21 +6,12 @@
   key_name                    = var.key-pair
   vpc_security_group_ids      = [var.app-sg]
   associate_public_ip_address = true
-  user_data                   = file("modules/ec2/tomcat.sh")
+  #user_data                   = file("modules/ec2/tomcat.sh")
+  user_data                   = filebase64("modules/ec2/tomcat.sh")
   tags = {
     Name = "${var.project}-app${count.index}"
   }
 }
-/*
-  user_data = <<EOF
-		#!/bin/bash
-		yum update -y
-		yum install -y httpd.x86_64
-		systemctl start httpd.service
-		systemctl enable httpd.service
-		echo ?Hello World from $(hostname -f)? > /var/www/html/index.html
-	EOF
-*/
 resource "aws_instance" "sql" {
   ami                    = var.centos
   instance_type          = "t2.micro"

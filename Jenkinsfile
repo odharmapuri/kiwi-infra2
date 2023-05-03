@@ -1,31 +1,25 @@
 pipeline {
 	agent any
-	/*tools {
-        maven "maven3"
-    }
-    environment {
-        NEXUS_VERSION = "nexus3"
-        NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "172.31.40.209:8081"
-        NEXUS_REPOSITORY = "vprofile-release"
-	    NEXUS_REPO_ID    = "vprofile-release"
-        NEXUS_CREDENTIAL_ID = "nexuslogin"
-        ARTVERSION = "${env.BUILD_ID}"
+    /*tools { 
+        maven 'MAVEN_HOME' 
+        jdk 'JAVA_HOME' 
     }*/
+    environment {
+
+    }
     stages{
         stage('Git clone'){
             steps {
-                sh '''rm -rf C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/*'''
+                sh '''rm -rf C:/ProgramData/Jenkins/.jenkins/workspace/*'''
                 sh '''git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git'''
             }
         }
-        /*stage('bulding infra'){
+        stage('creating s3'){
             steps {
-                sh 'terraform init'
-                sh 'terraform validate'
-                sh 'terraform apply --auto-approve'
+                sh '''terraform init'''
+                sh '''terraform apply -target=module.s3 --auto-approve'''
             }
-        }*/
+        }
         stage('packaging'){
             steps {
                 sh '''cd kiwi-infra2'''
@@ -53,6 +47,22 @@ pipeline {
             }
             steps {
                 sh '''mvn -f kiwi-infra2/pom.xml verify sonar:sonar'''
+            }
+        }
+        stage('copy app to s3'){
+            steps {
+                withAWS(region:'us-east-1',credentials:'s3creds') {
+                    sh 'echo "Uploading content with AWS creds"'
+                    /*s3Upload(file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/vprofile-v2.war', bucket:'testbuck3699', path:'/app/kiwi.war')*/
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/vprofile-v2.war', bucket:'testbuck3699/app')
+                    s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'C:/ProgramData/Jenkins/.jenkins/workspace/kiwi/kiwi-infra2/target/classes/application.properties', bucket:'testbuck3699/app')
+                }
+            }
+        }
+        stage('building infra'){
+            steps {
+                sh '''terraform init'''
+                sh '''terraform apply -target=module.s3 --auto-approve'''
             }
         }
         /*stage("Publish to Nexus Repository Manager") {

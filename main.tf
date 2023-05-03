@@ -26,8 +26,8 @@ module "alb" {
   source  = "./modules/alb"
   project = var.project
   vpc-id  = module.vpc.vpc-id
-  #count   = length(module.asg.app)
-  app     = module.asg.app
+  count   = length(module.ec2.app)
+  app     = element(module.ec2.app, count.index)
   alb-sg = module.vpc.alb-sg
   sn1    = module.vpc.sn1
   sn2    = module.vpc.sn2
