@@ -5,22 +5,8 @@ resource "aws_route53_zone" "route-zone" {
   }
 }
 resource "aws_route53_record" "rone" {
-  name    = "db.kiwi.com"
-  records = [var.db]
-  zone_id = aws_route53_zone.route-zone.id
-  type    = "A"
-  ttl     = "300"
-}
-resource "aws_route53_record" "rtwo" {
-  name    = "cache.kiwi.com"
-  records = [var.cache]
-  zone_id = aws_route53_zone.route-zone.id
-  type    = "A"
-  ttl     = "300"
-}
-resource "aws_route53_record" "rthree" {
-  name    = "mq.kiwi.com"
-  records = [var.mq]
+  name    = "backend.kiwi.com"
+  records = [var.bkend]
   zone_id = aws_route53_zone.route-zone.id
   type    = "A"
   ttl     = "300"

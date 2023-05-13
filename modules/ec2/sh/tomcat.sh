@@ -1,8 +1,6 @@
 #!/bin/bash
 sudo su
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz"
-yum install java-1.8.0-openjdk -y
-yum install telnet git maven wget -y
 cd /tmp/
 wget $TOMURL -O tomcatbin.tar.gz
 mkdir /usr/local/tomcat8
@@ -29,17 +27,15 @@ SyslogIdentifier=tomcat-%i
 [Install]
 WantedBy=multi-user.target
 EOT
+
 systemctl daemon-reload
 systemctl start tomcat
 systemctl enable tomcat
-git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git
-cd kiwi-infra2
-mvn install
-systemctl stop tomcat
-sleep 120
-rm -rf /usr/local/tomcat8/webapps/ROOT*
-cp target/vprofile-v2.war /usr/local/tomcat8/webapps/ROOT.war
-systemctl start tomcat
-sleep 300
-cp target/classes/application.properties /usr/local/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
 systemctl restart tomcat
+
+
+
+#systemctl stop tomcat
+#cp target/vprofile-v2.war /usr/local/tomcat8/webapps/ROOT.war
+#cp target/classes/application.properties /usr/local/tomcat8/webapps/ROOT/WEB-INF/classes/application.properties
+#systemctl start tomcat

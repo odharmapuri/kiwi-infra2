@@ -1,4 +1,5 @@
 variable "app-sg" {}
+variable "centos" {}
 variable "sn1" {}
 variable "sn2" {}
 variable "tg" {}

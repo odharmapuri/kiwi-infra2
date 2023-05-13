@@ -39,12 +39,12 @@
 
 resource "aws_launch_template" "lt" {
   name          = "${var.project}-lt"
-  image_id      = "ami-002070d43b0a4f171"
+  image_id      = var.centos
   instance_type = "t2.micro"
   key_name      = var.key-pair
   #user_data     = file("modules/ec2/tomcat.sh")
-  #user_data = base64encode(data.template_file.usrdat.rendered)
-  user_data = filebase64("modules/ec2/tomcat.sh")
+  #user_data = base64encode(data.template_file.usrdat.rendered) #Use with data template file
+  user_data = filebase64("modules/ec2/sh/tomcat.sh")
   lifecycle {
     create_before_destroy = true
   }

@@ -14,12 +14,11 @@ module "vpc" {
 module "ec2" {
   source     = "./modules/ec2"
   sn1        = module.vpc.sn1
-  sn2        = module.vpc.sn2
   app-sg     = module.vpc.app-sg
-  alb-sg     = module.vpc.alb-sg
   backend-sg = module.vpc.backend-sg
   project    = var.project
   centos     = var.centos
+  ubuntu     = var.ubuntu
   key-pair   = var.key-pair
 }
 module "alb" {
@@ -39,6 +38,7 @@ module "s3" {
 module "asg" {
   source   = "./modules/asg"
   project  = var.project
+  centos   = var.centos 
   app-sg   = module.vpc.app-sg
   sn1      = module.vpc.sn1
   sn2      = module.vpc.sn2
@@ -49,7 +49,5 @@ module "asg" {
 module "route53" {
   source = "./modules/route53"
   vpc-id = module.vpc.vpc-id
-  db     = module.ec2.db
-  cache  = module.ec2.cache
-  mq     = module.ec2.mq
+  bkend  = module.ec2.bkend
 }

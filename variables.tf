@@ -21,6 +21,9 @@ variable "zone1b" {
 variable "centos" {
   default = "ami-002070d43b0a4f171"
 }
+variable "ubuntu" {
+  default = "ami-007855ac798b5175e"
+}
 variable "key-pair" {
   default = "kiwigate"
 }
