@@ -1,14 +1,15 @@
 #!/bin/bash
-sudo su
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz"
+sudo yum install wget -y
+sudo yum install java-11-openjdk -y
 cd /tmp/
-wget $TOMURL -O tomcatbin.tar.gz
+sudo wget $TOMURL -O tomcatbin.tar.gz
 mkdir /usr/local/tomcat8
-tar xzvf tomcatbin.tar.gz --strip-components=1 -C /usr/local/tomcat8
-useradd --shell /sbin/nologin tomcat
-chown -R tomcat.tomcat /usr/local/tomcat8
-chmod -R +rwx /usr/local/tomcat8
-rm -rf /etc/systemd/system/tomcat.service
+sudo tar xzvf tomcatbin.tar.gz --strip-components=1 -C /usr/local/tomcat8
+sudo useradd --shell /sbin/nologin tomcat
+sudo chown -R tomcat.tomcat /usr/local/tomcat8
+sudo chmod -R +rwx /usr/local/tomcat8
+sudo rm -rf /etc/systemd/system/tomcat.service
 
 cat <<EOT>> /etc/systemd/system/tomcat.service
 [Unit]
@@ -28,10 +29,10 @@ SyslogIdentifier=tomcat-%i
 WantedBy=multi-user.target
 EOT
 
-systemctl daemon-reload
-systemctl start tomcat
-systemctl enable tomcat
-systemctl restart tomcat
+sudo systemctl daemon-reload
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
+sudo systemctl restart tomcat
 
 
 

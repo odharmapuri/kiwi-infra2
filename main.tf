@@ -35,7 +35,7 @@ module "s3" {
   source  = "./modules/s3"
   project = var.project
 }
-module "asg" {
+/*module "asg" {
   source   = "./modules/asg"
   project  = var.project
   centos   = var.centos 
@@ -45,7 +45,7 @@ module "asg" {
   tg       = module.alb[*].tg
   aws-alb  = module.alb[*].aws-alb
   key-pair = var.key-pair
-}
+}*/
 module "route53" {
   source = "./modules/route53"
   vpc-id = module.vpc.vpc-id

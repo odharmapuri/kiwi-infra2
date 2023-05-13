@@ -35,7 +35,7 @@ sudo systemctl enable mariadb
 
 #restore the dump file for the application
 cd /tmp/
-git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git
+sudo git clone -b master https://github.com/odharmapuri2/kiwi-infra2.git
 sudo mysqladmin -u root password "$DATABASE_PASS"
 sudo mysql -u root -p"$DATABASE_PASS" -e "UPDATE mysql.user SET Password=PASSWORD('$DATABASE_PASS') WHERE User='root'"
 sudo mysql -u root -p"$DATABASE_PASS" -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
