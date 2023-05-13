@@ -24,9 +24,9 @@ resource "aws_instance" "backend" {
     Name = "${var.project}-backend"
   }
 }
-/*resource "aws_instance" "jenkins" {
+resource "aws_instance" "jenkins" {
   ami                    = var.ubuntu
-  instance_type          = "t2.micro"
+  instance_type          = "t2.medium"
   subnet_id              = var.sn1
   key_name               = var.key-pair
   vpc_security_group_ids = [var.jenkins-sg]
@@ -35,4 +35,4 @@ resource "aws_instance" "backend" {
   tags = {
     Name = "${var.project}-jenkins"
   }
-}*/
+}
