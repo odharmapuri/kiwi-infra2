@@ -24,15 +24,15 @@ resource "aws_instance" "backend" {
     Name = "${var.project}-backend"
   }
 }
-resource "aws_instance" "jenkins" {
+/*resource "aws_instance" "jenkins" {
   ami                    = var.ubuntu
   instance_type          = "t2.micro"
   subnet_id              = var.sn1
   key_name               = var.key-pair
-  vpc_security_group_ids = [var.app-sg]
+  vpc_security_group_ids = [var.jenkins-sg]
   associate_public_ip_address = true
   user_data              = file("modules/ec2/sh/jenkins.sh")
   tags = {
     Name = "${var.project}-jenkins"
   }
-}
+}*/

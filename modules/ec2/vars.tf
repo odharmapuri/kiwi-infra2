@@ -14,4 +14,5 @@ variable "key-pair" {}
 variable "project" {}
 variable "sn1" {}
 variable "app-sg" {}
+variable "jenkins-sg" {}
 variable "backend-sg" {}

@@ -7,6 +7,9 @@ output "sn2" {
 output "app-sg" {
   value = aws_security_group.app-sg.id
 }
+output "jenkins-sg" {
+  value = aws_security_group.jenkins-sg.id
+}
 output "alb-sg" {
   value = aws_security_group.alb-sg.id
 }

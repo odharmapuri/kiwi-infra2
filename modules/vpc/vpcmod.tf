@@ -43,6 +43,36 @@ resource "aws_subnet" "sn2" {
     Name = "${var.project}-sn2"
   }
 }
+#security group for jenkins
+resource "aws_security_group" "jenkins-sg" {
+  name        = "jenkins-sg"
+  description = "Allow jenkins"
+  vpc_id      = aws_vpc.kiwi-vpc.id
+
+  ingress {
+    description = "jenkins"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "ssh"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "${var.project}-jenkins-sg"
+  }
+}
 #security group for alb
 resource "aws_security_group" "alb-sg" {
   name        = "alb-sg"

@@ -15,6 +15,7 @@ module "ec2" {
   source     = "./modules/ec2"
   sn1        = module.vpc.sn1
   app-sg     = module.vpc.app-sg
+  jenkins-sg = module.vpc.jenkins-sg
   backend-sg = module.vpc.backend-sg
   project    = var.project
   centos     = var.centos
