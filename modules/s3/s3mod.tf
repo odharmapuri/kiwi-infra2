@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "s3" {
   bucket = "${var.project}-artifact-storage"
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_acl" "s3-acl" {

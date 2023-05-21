@@ -1,6 +1,6 @@
 #!/bin/bash
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.37/bin/apache-tomcat-8.5.37.tar.gz"
-sudo yum install wget -y
+sudo yum install wget awscli -y
 sudo yum install java-11-openjdk -y
 cd /tmp/
 sudo wget $TOMURL -O tomcatbin.tar.gz
